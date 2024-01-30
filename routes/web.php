@@ -26,9 +26,9 @@ Route::middleware('auth')
         Route::get('leads/download', 'LeadController@download');
         Route::get('leads/dashboard', 'LeadController@dashboard');
         Route::get('leads/{id}', 'LeadController@detail');
-        Route::put('leads/{id}', 'LeadController@update');
+        Route::post('leads/{id}/update', 'LeadController@update');
         Route::delete('leads/{id}', 'LeadController@delete');
-        Route::put('leads/{id}/status', 'LeadController@updateStatus');
+        Route::patch('leads/{id}/status', 'LeadController@updateStatus');
 
         Route::get('settings/statuses', 'LeadStatusController@get');
         Route::post('settings/statuses', 'LeadStatusController@create');

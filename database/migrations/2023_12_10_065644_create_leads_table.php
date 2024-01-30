@@ -24,6 +24,9 @@ class CreateLeadsTable extends Migration
             $table->string('latitude', 50)->nullable();
             $table->string('longitude', 50)->nullable();
             $table->string('companyName', 100)->nullable();
+            $table->enum('gender', ['male', 'female'])->nullable();
+            $table->string('IDNumber', 50)->nullable();
+            $table->string('IDNumberPhoto', 250)->nullable();
             $table->text('generalNotes')->nullable();
             $table->foreignId('statusId');
             $table->foreignId('probabilityId');

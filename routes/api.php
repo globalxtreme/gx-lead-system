@@ -14,6 +14,28 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::post('login', 'LoginController@login')->name('api.login');
+
+Route::middleware('auth')
+    ->group(function () {
+
+        Route::post('logout', 'LoginController@logout');
+        Route::get('profile', 'LoginController@profile');
+
+        Route::get('leads', 'LeadController@get');
+        Route::post('leads', 'LeadController@create');
+        Route::get('leads/dashboard', 'LeadController@dashboard');
+        Route::get('leads/{id}', 'LeadController@detail');
+        Route::post('leads/{id}/update', 'LeadController@update');
+        Route::delete('leads/{id}', 'LeadController@delete');
+        Route::patch('leads/{id}/status', 'LeadController@updateStatus');
+
+        Route::get('settings/statuses', 'SettingController@getStatus');
+        Route::get('settings/types', 'SettingController@getType');
+        Route::get('settings/probabilities', 'SettingController@getProbability');
+        Route::get('settings/channels', 'SettingController@getChannel');
+        Route::get('settings/medias', 'SettingController@getMedia');
+        Route::get('settings/sources', 'SettingController@getSource');
+        Route::get('settings/branch-offices', 'SettingController@getBranchOffice');
+
+    });

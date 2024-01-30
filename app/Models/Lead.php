@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Lead extends Model
 {
@@ -57,6 +58,11 @@ class Lead extends Model
         $number .= rand(11, 99);
 
         return $number;
+    }
+
+    public function IDNumberPhotoUrl()
+    {
+        return Storage::disk('public')->url($this->IDNumberPhoto);
     }
 
 }

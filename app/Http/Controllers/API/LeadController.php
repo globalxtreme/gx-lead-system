@@ -1,17 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
-use App\Excel\GeneralExcel;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\LeadRequest;
 use App\Models\Lead;
-use App\Models\LeadChannel;
-use App\Models\LeadMedia;
-use App\Models\LeadSource;
 use App\Models\LeadStatus;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
 
 class LeadController extends Controller
 {
@@ -293,63 +289,6 @@ class LeadController extends Controller
         ]);
     }
 
-    public function download(Request $request)
-    {
-        $fromDate = $request->fromDate ? Carbon::createFromFormat('d/m/Y', $request->fromDate) : now()->subMonth();
-        $fromDate->startOfDay();
-
-        $toDate = $request->toDate ? Carbon::createFromFormat('d/m/Y', $request->toDate) : now();
-        $toDate->endOfDay();
-
-        $leads = Lead::whereBetween('created_at', [$fromDate, $toDate])->get();
-
-        $properties = array(
-            [
-                'Number',
-                'Branch Office',
-                'Full Name',
-                'Email',
-                'Phone',
-                'Address',
-                'Location',
-                'Company Name',
-                'General Notes',
-                'Status',
-                'Probability',
-                'Type',
-                'Channel',
-                'Media',
-                'Source',
-                'Created At',
-            ]
-        );
-        foreach ($leads as $lead) {
-            $properties[] = [
-                'number' => $lead->number,
-                'branchOffice' => optional($lead->branchOffice)->name,
-                'fullName' => $lead->fullName,
-                'email' => $lead->email,
-                'phone' => $lead->phone,
-                'address' => $lead->address,
-                'latitude' => "$lead->latitude,$lead->longitude",
-                'companyName' => $lead->companyName,
-                'generalNotes' => $lead->generalNotes,
-                'status' => optional($lead->status)->name,
-                'probability' => optional($lead->probability)->name,
-                'type' => optional($lead->type)->name,
-                'channel' => optional($lead->channel)->name,
-                'media' => optional($lead->media)->name,
-                'source' => optional($lead->source)->name,
-                'createdAt' => optional($lead->created_at)->format('d/m/Y H:i'),
-            ];
-        }
-
-        $filePath = "public/tmp/lead-{$fromDate->format('dmy')}-{$toDate->format('dmy')}.xlsx";
-        Excel::store(new GeneralExcel($properties), $filePath);
-
-        return response()->download(storage_path("app/$filePath"));
-    }
-
     public function dashboard(Request $request)
     {
         $fromDate = $request->fromDate ? Carbon::createFromFormat('d/m/Y', $request->fromDate) : now()->subMonth();
@@ -367,36 +306,12 @@ class LeadController extends Controller
             ];
         })->toArray();
 
-        $channels = LeadChannel::get()->map(function ($channel) use ($leads) {
-            return [
-                'name' => $channel->name,
-                'total' => $leads->where('channelId', $channel->id)->count()
-            ];
-        })->toArray();
-
-        $medias = LeadMedia::get()->map(function ($media) use ($leads) {
-            return [
-                'name' => $media->name,
-                'total' => $leads->where('mediaId', $media->id)->count()
-            ];
-        })->toArray();
-
-        $sources = LeadSource::get()->map(function ($source) use ($leads) {
-            return [
-                'name' => $source->name,
-                'total' => $leads->where('sourceId', $source->id)->count()
-            ];
-        })->toArray();
-
         return response()->json([
             'status' => 'success',
             'message' => 'Success',
             'data' => [
                 'total' => count($leads),
                 'statuses' => $statuses,
-                'channels' => $channels,
-                'medias' => $medias,
-                'sources' => $sources,
             ]
         ]);
     }
