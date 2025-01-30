@@ -22,12 +22,32 @@ class LeadController extends Controller
                 });
             }
 
+            if ($request->branchOfficeId != '') {
+                $query->where('branchOfficeId', $request->branchOfficeId);
+            }
+
             if ($request->statusId != '') {
                 $query->where('statusId', $request->statusId);
             }
 
-            if ($request->branchOfficeId != '') {
-                $query->where('branchOfficeId', $request->branchOfficeId);
+            if ($request->probabilityId != '') {
+                $query->where('probabilityId', $request->probabilityId);
+            }
+
+            if ($request->typeId != '') {
+                $query->where('typeId', $request->typeId);
+            }
+
+            if ($request->channelId != '') {
+                $query->where('channelId', $request->channelId);
+            }
+
+            if ($request->mediaId != '') {
+                $query->where('channelId', $request->mediaId);
+            }
+
+            if ($request->sourceId != '') {
+                $query->where('sourceId', $request->sourceId);
             }
 
             if ($request->fromDate != '' && $request->toDate != '') {

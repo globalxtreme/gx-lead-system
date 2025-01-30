@@ -38,4 +38,6 @@ Route::middleware('auth')
         Route::get('settings/sources', 'SettingController@getSource');
         Route::get('settings/branch-offices', 'SettingController@getBranchOffice');
 
+        Route::post('onu/check', 'OnuController@checkOnu');
+
     });

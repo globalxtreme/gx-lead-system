@@ -65,4 +65,6 @@ Route::middleware('auth')
         Route::put('settings/branch-offices/{id}', 'BranchOfficeController@update');
         Route::delete('settings/branch-offices/{id}', 'BranchOfficeController@delete');
 
+        Route::post('onu/check', 'OnuController@checkOnu');
+
     });
